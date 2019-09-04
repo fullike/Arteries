@@ -20,13 +20,97 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - [Support link](https://forums.unrealengine.com/community/work-in-progress/1637829-houdini-alternative-a-procedural-modeling-toolkit-based-on-blueprint)
 - [Roadmap link](https://trello.com/b/SZbZi3Rd/arteries)
 
----
-### Documentation
+## Documentation
 
 #### 1. Editor
 
 #### 2. Multi-threaded
 
 #### 3. BP callable functions
+##### Basic Primitives
+- Line
+- Grid
+- Circle
+- Sphere
+- Tube
+- Torus
+- Box
+
+##### Copy and Transforms
+- Add
+- Copy
+- CopyAndTransform
+- CopyToPoints
+- Transform
+- Merge
+- MergeArray
+
+##### Attributes And Groups
+- SortRandomly
+- SortByAttribute
+- GroupRange
+- Measure
+- Hole
+- SetMaterial
+
+##### Lua Script
+- Execute
+
+##### Geometry Operations
+- Carve
+- BreakPoints
+- Scatter
+- Voronoi
+- SubDivide
+- Blast
+- Facet
+- Divide
+- Fuse
+- Clean
+- MakeGrids
+- PolyExpand
+- Clip
+- Resample
+- Reverse
+- PolyBevel
+- PolyExtrude
+- Sweep
+
 
 #### 4. Lua callable functions
+##### BP Properties (Global)
+- GetInt
+- GetFloat
+- GetVec2
+- GetVec3
+##### Element Properties (Point, Primitive, Geometry)
+- HasInt
+- GetInt
+- SetInt
+- HasFloat
+- GetFloat
+- SetFloat
+- HasVec3
+- GetVec3
+- SetVec3
+##### Point
+- Position (Property)
+- GetTargets
+- GetPrimitives
+##### Primitive
+- Insert
+- Add
+- NumPoints
+- GetPoint
+- Delete
+##### Geometry
+- AddPoint
+- AddPrimitive
+- NumPoints
+- NumPrimitives
+- GetPoint
+- GetPrimitive
+- DeletePoint
+- DeletePrimitive
+- SetPointGroup
+- SetPrimitiveGroup
