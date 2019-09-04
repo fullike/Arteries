@@ -22,12 +22,12 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 
 ## Documentation
 
-#### 1. Editor
+### 1. Editor
 
-#### 2. Multi-threaded
+### 2. Multi-threaded
 
-#### 3. BP callable functions
-##### Basic Primitives
+### 3. BP callable functions
+#### Basic Primitives
 - Line
 - Grid
 - Circle
@@ -36,7 +36,7 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - Torus
 - Box
 
-##### Copy and Transforms
+#### Copy and Transforms
 - Add
 - Copy
 - CopyAndTransform
@@ -45,7 +45,7 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - Merge
 - MergeArray
 
-##### Attributes And Groups
+#### Attributes And Groups
 - SortRandomly
 - SortByAttribute
 - GroupRange
@@ -53,10 +53,10 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - Hole
 - SetMaterial
 
-##### Lua Script
+#### Lua Script
 - Execute
 
-##### Geometry Operations
+#### Geometry Operations
 - Carve
 - BreakPoints
 - Scatter
@@ -77,13 +77,13 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - Sweep
 
 
-#### 4. Lua callable functions
-##### BP Properties (Global)
+### 4. Lua callable functions
+#### BP Properties (Global)
 - GetInt
 - GetFloat
 - GetVec2
 - GetVec3
-##### Element Properties (Point, Primitive, Geometry)
+#### Element (Point, Primitive, Geometry) Properties
 - HasInt
 - GetInt
 - SetInt
@@ -93,17 +93,17 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - HasVec3
 - GetVec3
 - SetVec3
-##### Point
+#### Point
 - Position (Property)
 - GetTargets
 - GetPrimitives
-##### Primitive
+#### Primitive
 - Insert
 - Add
 - NumPoints
 - GetPoint
 - Delete
-##### Geometry
+#### Geometry
 - AddPoint
 - AddPrimitive
 - NumPoints
