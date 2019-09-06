@@ -41,6 +41,16 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 </tr>
 </table>
 
+#### Check each steps
+The final result will be displayed in Arteries Viewport after you click build button. Sometimes it's also neccessary to check the result of each steps. You can display results of any selected geometry operation nodes using Arteries extended functions in context menu or just press "D" key.
+
+![](./Images/Img_06.jpg)
+
+#### Place static meshes
+
+#### Spawn sub actors
+
+#### Multi-thread
 
 ### 2. The extended blueprint editor
 Arteries extends blueprint editor for its specific functions. You could always find the two extended windows in window menu.\
@@ -123,7 +133,6 @@ aaaa
 - PolyBevel
 - PolyExtrude
 - Sweep
-
 
 ### 4. Lua callable functions
 #### BP Properties (Global)
