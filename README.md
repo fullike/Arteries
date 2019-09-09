@@ -11,14 +11,14 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - Point/Primitive group.
 - Point/Primitive custom attributes.
 - Tangent space and UV coordinates generation.
-- Static mesh instancing during placement.
+- Procedural static mesh instancing.
 - Full source code provided.
 
 ### Links
-- [Marketplace link](https://www.unrealengine.com/marketplace/en-US/slug)
-- [Video link](https://www.youtube.com/watch?v=zkpzxiqoXaU&list=PLCWhWOgVmdwmC1AvcIOw95H3lHI3wF6mG)
+- [Showcase videos](https://www.youtube.com/watch?v=zkpzxiqoXaU&list=PLCWhWOgVmdwmC1AvcIOw95H3lHI3wF6mG)
+- [Roadmap](https://trello.com/b/SZbZi3Rd/arteries)
 - [Support link](https://forums.unrealengine.com/community/work-in-progress/1637829-houdini-alternative-a-procedural-modeling-toolkit-based-on-blueprint)
-- [Roadmap link](https://trello.com/b/SZbZi3Rd/arteries)
+- [Marketplace link](https://www.unrealengine.com/marketplace/en-US/slug)
 
 ## Documentation
 
@@ -60,8 +60,11 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 <td colspan="2">3) Finish the implementation then click compile and build button.</td>
 </tr>
 </table>
-For usages of more geometry operation nodes and in-depth tutorials please see the playlist
-<video src="https://www.youtube.com/watch?v=aY9LPyWiLrc&t=191s" width="320" height="180"></video>
+For usages of more geometry operation nodes and in-depth tutorials please see the tutorial playlist
+
+\
+[![Watch the video](https://img.youtube.com/vi/aY9LPyWiLrc/hqdefault.jpg)](https://www.youtube.com/watch?v=aY9LPyWiLrc&list=PLCWhWOgVmdwmC1AvcIOw95H3lHI3wF6mG)
+
 
 #### Check each steps
 The final result will be displayed in Arteries Viewport after you click build button. Sometimes it's also neccessary to check the result of each steps. You can display results of any selected geometry operation nodes using Arteries extended functions in context menu or just press "D" key.
@@ -180,6 +183,7 @@ Some manually created geometry used by the modeling procedure internally should 
 - GetFloat
 - GetVec2
 - GetVec3
+
 #### Element (Point, Primitive, Geometry) Properties
 - HasInt
 - GetInt
@@ -190,16 +194,19 @@ Some manually created geometry used by the modeling procedure internally should 
 - HasVec3
 - GetVec3
 - SetVec3
+
 #### Point
 - Position (Property)
 - GetTargets
 - GetPrimitives
+
 #### Primitive
 - Insert
 - Add
 - NumPoints
 - GetPoint
 - Delete
+
 #### Geometry
 - AddPoint
 - AddPrimitive
