@@ -3,16 +3,11 @@
 	"EngineAssociation": "4.21",
 	"Category": "",
 	"Description": "",
-	"Modules": [
+	"Plugins": [
 		{
 			"Name": "Arteries",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "ArteriesEditor",
-			"Type": "Editor",
-			"LoadingPhase": "Default"
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/4082d0b191644b3483b17dd8623b0676"
 		}
 	]
 }
