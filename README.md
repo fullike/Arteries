@@ -18,7 +18,7 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - [Showcase videos](https://www.youtube.com/watch?v=zkpzxiqoXaU&list=PLCWhWOgVmdwmC1AvcIOw95H3lHI3wF6mG)
 - [Roadmap](https://trello.com/b/SZbZi3Rd/arteries)
 - [Support link](https://forums.unrealengine.com/community/work-in-progress/1637829-houdini-alternative-a-procedural-modeling-toolkit-based-on-blueprint)
-- [Marketplace link](https://www.unrealengine.com/marketplace/zh-CN/slug/a-procedural-modeling-toolkit-based-on-blueprint)
+- [Marketplace link](https://www.unrealengine.com/marketplace/en-US/slug/a-procedural-modeling-toolkit-based-on-blueprint)
 
 ## Documentation
 
