@@ -3,6 +3,16 @@
 	"EngineAssociation": "4.21",
 	"Category": "",
 	"Description": "",
+	"Modules": [
+		{
+			"Name": "ArteriesLauncher",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	],
 	"Plugins": [
 		{
 			"Name": "Arteries",
