@@ -19,9 +19,10 @@ public:
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
 	TSharedRef<ITableRow> MakeDataTile(AArteriesActor* Item, const TSharedRef<STableViewBase>& Owner);
-	const FSlateBrush* GetThumbnail(AArteriesActor* Item) const;
+	void LoadThumbnail(AArteriesActor* Item);
 private:
 	TArray<AArteriesActor*> Data;
 	TSharedPtr<FUICommandList> CommandList;
 	TSharedPtr<STileView<AArteriesActor*>> TileView;
+	TMap<AArteriesActor*, TSharedPtr<FSlateDynamicImageBrush>> Brushes;
 };
