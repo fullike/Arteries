@@ -4,7 +4,7 @@
 #include "SlateOptMacros.h"
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
-
+#include "Editor/EditorStyle/Public/EditorStyle.h"
 template< class T >
 inline T* LoadMainAsset(const TCHAR* Name)
 {
@@ -14,35 +14,58 @@ inline T* LoadMainAsset(const TCHAR* Name)
 
 #define LOCTEXT_NAMESPACE "ArteriesLauncher"
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
+SAssetBrowser::SAssetBrowser() :Actor(NULL)
+{
+
+}
 void SAssetBrowser::Construct(const FArguments& InArgs)
 {
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/Windows/Window01")));
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/Stairs/Stairs01")));
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/Doors/Door01")));
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/Doors/Door02")));
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/Walls/Wall")));
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/House")));
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/FlowerBed")));
-	Data.Add(LoadMainAsset<AArteriesActor>(TEXT("/Game/ArteriesBP/Blocks")));
+	auto AddData = [&](TCHAR* Path)
+	{
+		UBlueprint* BP = LoadMainAsset<UBlueprint>(Path);
+		BP->AddToRoot();
+		Data.Add(BP);
+	};
+	AddData(TEXT("/Game/ArteriesBP/Windows/Window01"));
+	AddData(TEXT("/Game/ArteriesBP/Stairs/Stairs01"));
+	AddData(TEXT("/Game/ArteriesBP/Doors/Door01"));
+	AddData(TEXT("/Game/ArteriesBP/Doors/Door02"));
+	AddData(TEXT("/Game/ArteriesBP/Walls/Wall"));
+	AddData(TEXT("/Game/ArteriesBP/House"));
+	AddData(TEXT("/Game/ArteriesBP/FlowerBed"));
+	AddData(TEXT("/Game/ArteriesBP/Blocks"));
 	ChildSlot
 	[
-		SNew( SVerticalBox )
-		+ SVerticalBox::Slot()
+		SNew(SSplitter)
+		.Style(FEditorStyle::Get(), "DetailsView.Splitter")
+		.PhysicalSplitterHandleSize(1.0f)
+		.HitDetectionSplitterHandleSize(5.0f)
+		.Orientation(EOrientation::Orient_Vertical)
+		+ SSplitter::Slot()
+		.Value(0.5f)
 		[
-			SAssignNew(TileView,STileView<AArteriesActor*>)
+			SAssignNew(TileView, STileView<UBlueprint*>)
 			.ListItemsSource(&Data)
 			.OnGenerateTile(this, &SAssetBrowser::MakeDataTile)
-		//	.OnContextMenuOpening(this, &SLib3dWorldBrowser::OnContextMenuOpening)
+			.OnSelectionChanged(this, &SAssetBrowser::OnTileViewSelectionChanged)
+			//	.OnContextMenuOpening(this, &SLib3dWorldBrowser::OnContextMenuOpening)
 			.ItemWidth(144)
 			.ItemHeight(176)
+		]
+		+ SSplitter::Slot()
+		.Value(0.5f)
+		[
+			SAssignNew(PropertyView, SPropertyView)
+			.OnPropertyChanged(this, &SAssetBrowser::OnPropertyChanged)
+		//	.OnContextMenuOpened(this, &SOSMControlPanel::OnOSMContextMenuOpened)
 		]
 	];
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
-TSharedRef<ITableRow> SAssetBrowser::MakeDataTile(AArteriesActor* Item, const TSharedRef<STableViewBase>& Owner)
+TSharedRef<ITableRow> SAssetBrowser::MakeDataTile(UBlueprint* Item, const TSharedRef<STableViewBase>& Owner)
 {
-	TSharedPtr< STableRow<AArteriesActor*> > TableRowWidget;
-	SAssignNew( TableRowWidget, STableRow<AArteriesActor*>, Owner )
+	TSharedPtr< STableRow<UBlueprint*> > TableRowWidget;
+	SAssignNew( TableRowWidget, STableRow<UBlueprint*>, Owner )
 	.Style(&FCoreStyle::Get().GetWidgetStyle<FTableRowStyle>("TableView.Row"))
 	.Cursor( EMouseCursor::GrabHand );
 //	.OnDragDetected( this, &SLib3dWorldBrowser::OnDraggingAssetItem );
@@ -77,7 +100,7 @@ TSharedRef<ITableRow> SAssetBrowser::MakeDataTile(AArteriesActor* Item, const TS
 	TableRowWidget->SetContent(Border.ToSharedRef());
 	return TableRowWidget.ToSharedRef();
 }
-void SAssetBrowser::LoadThumbnail(AArteriesActor* Item)
+void SAssetBrowser::LoadThumbnail(UBlueprint* Item)
 {
 	if (!Brushes.Contains(Item))
 	{
@@ -100,5 +123,20 @@ void SAssetBrowser::LoadThumbnail(AArteriesActor* Item)
 		FName ResourceName(*Item->GetName());
 		Brushes.Add(Item, FSlateDynamicImageBrush::CreateWithImageData(ResourceName, FVector2D(ImageWrapper->GetWidth(), ImageWrapper->GetHeight()), *RawImageData));
 	}
+}
+void SAssetBrowser::OnTileViewSelectionChanged(UBlueprint* Item, ESelectInfo::Type SelectInfo)
+{
+	if (Actor)
+	{
+		GWorld->DestroyActor(Actor);
+		Actor = NULL;
+	}
+	Actor = Cast<AArteriesActor>(GWorld->SpawnActor(Item->GeneratedClass, &FTransform::Identity));
+	Actor->Build(true);
+	PropertyView->SetObject(Actor);
+}
+void SAssetBrowser::OnPropertyChanged(FPropertyNode* PropertyNode, uint8* Data)
+{
+	Actor->Build(true);
 }
 #undef LOCTEXT_NAMESPACE

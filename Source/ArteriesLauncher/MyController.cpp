@@ -22,8 +22,8 @@ void AMyController::PlayerTick(float DeltaTime)
 void AMyController::Popup(TSharedRef<SWidget> Content)
 {
 	TSharedPtr<SPopupWindow> Window = SNew(SPopupWindow)
-		.Title(FText::FromString("Lib3dClient"))
-		.ClientSize(FVector2D(640, 320));
+		.Title(FText::FromString("Runtime AssetBrowser"))
+		.ClientSize(FVector2D(480, 640));
 	Window->SetContent(Content);
 //	Window->SetAsModalWindow();
 	Window->SetRequestDestroyWindowOverride(FRequestDestroyWindowOverride::CreateSP(Window.Get(), &SPopupWindow::CloseWindowOverride));
