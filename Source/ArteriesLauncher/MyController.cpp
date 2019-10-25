@@ -2,31 +2,26 @@
 
 #include "MyController.h"
 
-void AMyController::PlayerTick(float DeltaTime)
+AMyController::AMyController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	APlayerController::PlayerTick(DeltaTime);
-	/*
-	if (Window.IsValid())
-	{
-		if (!Window->GetNativeWindow()->GetOSWindowHandle())
-			Window = TSharedPtr<SPopupWindow>();
-		else if (!Window->HasMouseCapture())
-			Window->BringToFront();
-	}
-	else*/
-	{
-		if (WasInputKeyJustPressed(EKeys::Escape))
-			Popup(SNew(SAssetBrowser));
-	}
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
 }
-void AMyController::Popup(TSharedRef<SWidget> Content)
+void AMyController::BeginPlay()
 {
-	TSharedPtr<SPopupWindow> Window = SNew(SPopupWindow)
+	APlayerController::BeginPlay();
+	TSharedPtr<SWindow> Window = SNew(SWindow)
 		.Title(FText::FromString("Runtime AssetBrowser"))
+		.HasCloseButton(false)
+		.SupportsMaximize(false)
+		.SupportsMinimize(false)
+		.SizingRule(ESizingRule::FixedSize)
+		.AutoCenter(EAutoCenter::None)
 		.ClientSize(FVector2D(480, 640));
-	Window->SetContent(Content);
+	Window->SetContent(SNew(SAssetBrowser));
 //	Window->SetAsModalWindow();
-	Window->SetRequestDestroyWindowOverride(FRequestDestroyWindowOverride::CreateSP(Window.Get(), &SPopupWindow::CloseWindowOverride));
+//	Window->SetRequestDestroyWindowOverride(FRequestDestroyWindowOverride::CreateSP(Window.Get(), &SPopupWindow::CloseWindowOverride));
 
 	TSharedPtr<SWindow> TopLevelWindow = FSlateApplication::Get().GetActiveTopLevelWindow();
 	if (TopLevelWindow.IsValid())
@@ -44,19 +39,4 @@ void AMyController::Popup(TSharedRef<SWidget> Content)
 	//	Window->BringToFront(true);
 	//	Window->BringToFront();
 	//	Window->ShowWindow();
-}
-FReply SPopupWindow::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
-{
-	if (InKeyEvent.GetKey() == EKeys::Escape && !InKeyEvent.IsRepeat())
-	{
-		RequestDestroyWindow();
-		return FReply::Handled();
-	}
-	return FReply::Unhandled();
-}
-void SPopupWindow::CloseWindowOverride(const TSharedRef<SWindow>& WindowBeingClosed)
-{
-	FSlateApplication::Get().RequestDestroyWindow(WindowBeingClosed);
-	//	FSlateApplication::Get().ActivateGameViewport();
-	FSlateApplication::Get().SetUserFocusToGameViewport(0);
 }

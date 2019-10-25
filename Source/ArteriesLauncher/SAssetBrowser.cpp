@@ -5,24 +5,18 @@
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
 #include "Editor/EditorStyle/Public/EditorStyle.h"
-template< class T >
-inline T* LoadMainAsset(const TCHAR* Name)
-{
-	UPackage* Package = LoadPackage(nullptr, Name, LOAD_None);
-	return Package ? static_cast<T*>(FindObjectWithOuter(Package, T::StaticClass())) : NULL;
-}
 
 #define LOCTEXT_NAMESPACE "ArteriesLauncher"
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 SAssetBrowser::SAssetBrowser() :Actor(NULL)
 {
-
+	FModuleManager::LoadModuleChecked<IEditorStyleModule>("EditorStyle");
 }
 void SAssetBrowser::Construct(const FArguments& InArgs)
 {
 	auto AddData = [&](TCHAR* Path)
 	{
-		UBlueprint* BP = LoadMainAsset<UBlueprint>(Path);
+		UBlueprintGeneratedClass* BP = LoadMainAsset<UBlueprintGeneratedClass>(Path);
 		BP->AddToRoot();
 		Data.Add(BP);
 	};
@@ -44,7 +38,7 @@ void SAssetBrowser::Construct(const FArguments& InArgs)
 		+ SSplitter::Slot()
 		.Value(0.5f)
 		[
-			SAssignNew(TileView, STileView<UBlueprint*>)
+			SAssignNew(TileView, STileView<UBlueprintGeneratedClass*>)
 			.ListItemsSource(&Data)
 			.OnGenerateTile(this, &SAssetBrowser::MakeDataTile)
 			.OnSelectionChanged(this, &SAssetBrowser::OnTileViewSelectionChanged)
@@ -62,7 +56,7 @@ void SAssetBrowser::Construct(const FArguments& InArgs)
 	];
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
-TSharedRef<ITableRow> SAssetBrowser::MakeDataTile(UBlueprint* Item, const TSharedRef<STableViewBase>& Owner)
+TSharedRef<ITableRow> SAssetBrowser::MakeDataTile(UBlueprintGeneratedClass* Item, const TSharedRef<STableViewBase>& Owner)
 {
 	TSharedPtr< STableRow<UBlueprint*> > TableRowWidget;
 	SAssignNew( TableRowWidget, STableRow<UBlueprint*>, Owner )
@@ -100,7 +94,7 @@ TSharedRef<ITableRow> SAssetBrowser::MakeDataTile(UBlueprint* Item, const TShare
 	TableRowWidget->SetContent(Border.ToSharedRef());
 	return TableRowWidget.ToSharedRef();
 }
-void SAssetBrowser::LoadThumbnail(UBlueprint* Item)
+void SAssetBrowser::LoadThumbnail(UBlueprintGeneratedClass* Item)
 {
 	if (!Brushes.Contains(Item))
 	{
@@ -124,14 +118,14 @@ void SAssetBrowser::LoadThumbnail(UBlueprint* Item)
 		Brushes.Add(Item, FSlateDynamicImageBrush::CreateWithImageData(ResourceName, FVector2D(ImageWrapper->GetWidth(), ImageWrapper->GetHeight()), *RawImageData));
 	}
 }
-void SAssetBrowser::OnTileViewSelectionChanged(UBlueprint* Item, ESelectInfo::Type SelectInfo)
+void SAssetBrowser::OnTileViewSelectionChanged(UBlueprintGeneratedClass* Item, ESelectInfo::Type SelectInfo)
 {
 	if (Actor)
 	{
 		GWorld->DestroyActor(Actor);
 		Actor = NULL;
 	}
-	Actor = Cast<AArteriesActor>(GWorld->SpawnActor(Item->GeneratedClass, &FTransform::Identity));
+	Actor = Cast<AArteriesActor>(GWorld->SpawnActor(Item, &FTransform::Identity));
 	Actor->Build(true);
 	PropertyView->SetObject(Actor);
 }

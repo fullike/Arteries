@@ -19,15 +19,22 @@ public:
 	SAssetBrowser();
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
-	TSharedRef<ITableRow> MakeDataTile(UBlueprint* Item, const TSharedRef<STableViewBase>& Owner);
-	void LoadThumbnail(UBlueprint* Item);
-	void OnTileViewSelectionChanged(UBlueprint* Item, ESelectInfo::Type SelectInfo);
+	TSharedRef<ITableRow> MakeDataTile(UBlueprintGeneratedClass* Item, const TSharedRef<STableViewBase>& Owner);
+	void LoadThumbnail(UBlueprintGeneratedClass* Item);
+	void OnTileViewSelectionChanged(UBlueprintGeneratedClass* Item, ESelectInfo::Type SelectInfo);
 	void OnPropertyChanged(FPropertyNode* PropertyNode, uint8* Data);
 private:
 	AArteriesActor* Actor;
-	TArray<UBlueprint*> Data;
+	TArray<UBlueprintGeneratedClass*> Data;
 	TSharedPtr<FUICommandList> CommandList;
 	TSharedPtr<SPropertyView> PropertyView;
-	TSharedPtr<STileView<UBlueprint*>> TileView;
-	TMap<UBlueprint*, TSharedPtr<FSlateDynamicImageBrush>> Brushes;
+	TSharedPtr<STileView<UBlueprintGeneratedClass*>> TileView;
+	TMap<UBlueprintGeneratedClass*, TSharedPtr<FSlateDynamicImageBrush>> Brushes;
 };
+
+template< class T >
+inline T* LoadMainAsset(const TCHAR* Name)
+{
+	UPackage* Package = LoadPackage(nullptr, Name, LOAD_None);
+	return Package ? static_cast<T*>(FindObjectWithOuter(Package, T::StaticClass())) : NULL;
+}

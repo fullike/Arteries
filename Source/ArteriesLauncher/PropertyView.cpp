@@ -197,9 +197,12 @@ void SPropertyView::Refresh()
 			if (MetaData->HasValue(StructMember, CategoryKey))
 			OutCategoryName = FName(*MetaData->GetValue(StructMember, CategoryKey));
 			*/
-			UClass* Class = StructMember->GetClass();
-			if (FPropertyNode::CreateFunc.Contains(Class))
-				RootNodeList.Add(FPropertyNode::CreateFunc[Class](this, NULL, StructMember, RootData + StructMember->GetOffset_ForInternal()));
+			if (StructMember->HasAllPropertyFlags(CPF_Edit | CPF_BlueprintVisible) && !StructMember->HasAnyPropertyFlags(CPF_DisableEditOnInstance))
+			{
+				UClass* Class = StructMember->GetClass();
+				if (FPropertyNode::CreateFunc.Contains(Class))
+					RootNodeList.Add(FPropertyNode::CreateFunc[Class](this, NULL, StructMember, RootData + StructMember->GetOffset_ForInternal()));
+			}
 		}
 	}
 	PropertyTree->RequestTreeRefresh();
