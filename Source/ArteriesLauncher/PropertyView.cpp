@@ -111,6 +111,7 @@ void SPropertyView::Construct(const FArguments& InArgs)
 		FPropertyNode::CreateFunc.Add(USetProperty::StaticClass(), FSetPropertyNode::Create);
 		FPropertyNode::CreateFunc.Add(UStructProperty::StaticClass(), FStructPropertyNode::Create);
 		FPropertyNode::CreateFunc.Add(UObjectProperty::StaticClass(), FObjectPropertyNode::Create);
+		FPropertyNode::CreateFunc.Add(UClassProperty::StaticClass(), FObjectPropertyNode::Create);
 		FPropertyNode::CreateFunc.Add(UBoolProperty::StaticClass(), FBoolPropertyNode::Create);
 
 		FPropertyNode::CreateFunc.Add(UByteProperty::StaticClass(), FNumberPropertyNode<uint8>::Create);

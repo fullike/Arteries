@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MyController.h"
-
+#include "Classes/Engine/AssetManager.h"
 AMyController::AMyController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	bShowMouseCursor = true;
@@ -11,7 +11,11 @@ AMyController::AMyController(const FObjectInitializer& ObjectInitializer) : Supe
 void AMyController::BeginPlay()
 {
 	APlayerController::BeginPlay();
-	TSharedPtr<SWindow> Window = SNew(SWindow)
+	IAssetRegistry& AssetRegistry = UAssetManager::Get().GetAssetRegistry();
+	TArray<FString> PathsToScan;
+	PathsToScan.Add(TEXT("/Game/"));
+	AssetRegistry.ScanPathsSynchronous(PathsToScan);
+	Window = SNew(SWindow)
 		.Title(FText::FromString("Runtime AssetBrowser"))
 		.HasCloseButton(false)
 		.SupportsMaximize(false)
@@ -19,10 +23,8 @@ void AMyController::BeginPlay()
 		.SizingRule(ESizingRule::FixedSize)
 		.AutoCenter(EAutoCenter::None)
 		.ClientSize(FVector2D(480, 640));
-	Window->SetContent(SNew(SAssetBrowser));
-//	Window->SetAsModalWindow();
-//	Window->SetRequestDestroyWindowOverride(FRequestDestroyWindowOverride::CreateSP(Window.Get(), &SPopupWindow::CloseWindowOverride));
-
+	AssetBrowser = SNew(SAssetBrowser);
+	Window->SetContent(AssetBrowser.ToSharedRef());
 	TSharedPtr<SWindow> TopLevelWindow = FSlateApplication::Get().GetActiveTopLevelWindow();
 	if (TopLevelWindow.IsValid())
 	{
@@ -32,11 +34,18 @@ void AMyController::BeginPlay()
 	{
 		FSlateApplication::Get().AddWindow(Window.ToSharedRef(), true);
 	}
-
-
-	//	FSlateApplication::Get().AddModalWindow(Window.ToSharedRef(), ParentWindow.ToSharedRef());
-	//	FSlateApplication::Get().AddWindowAsNativeChild( Window.ToSharedRef(), ParentWindow.ToSharedRef() );
-	//	Window->BringToFront(true);
-	//	Window->BringToFront();
-	//	Window->ShowWindow();
+}
+void AMyController::Tick(float DeltaSeconds)
+{
+	APlayerController::Tick(DeltaSeconds);
+	if (AssetBrowser->Actor && AssetBrowser->Actor->IsRunning())
+	{
+		if (Window->IsVisible())
+			Window->HideWindow();
+	}
+	else
+	{
+		if (!Window->IsVisible())
+			Window->ShowWindow();
+	}
 }

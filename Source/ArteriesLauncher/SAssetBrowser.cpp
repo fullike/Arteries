@@ -12,6 +12,11 @@ SAssetBrowser::SAssetBrowser() :Actor(NULL)
 {
 	FModuleManager::LoadModuleChecked<IEditorStyleModule>("EditorStyle");
 }
+SAssetBrowser::~SAssetBrowser()
+{
+	for (UBlueprintGeneratedClass* Class : Data)
+		Class->RemoveFromRoot();
+}
 void SAssetBrowser::Construct(const FArguments& InArgs)
 {
 	auto AddData = [&](TCHAR* Path)
@@ -120,14 +125,17 @@ void SAssetBrowser::LoadThumbnail(UBlueprintGeneratedClass* Item)
 }
 void SAssetBrowser::OnTileViewSelectionChanged(UBlueprintGeneratedClass* Item, ESelectInfo::Type SelectInfo)
 {
-	if (Actor)
+	if (Item)
 	{
-		GWorld->DestroyActor(Actor);
-		Actor = NULL;
+		if (Actor)
+		{
+			GWorld->DestroyActor(Actor);
+			Actor = NULL;
+		}
+		Actor = Cast<AArteriesActor>(GWorld->SpawnActor(Item, &FTransform::Identity));
+		Actor->Build(true);
+		PropertyView->SetObject(Actor);
 	}
-	Actor = Cast<AArteriesActor>(GWorld->SpawnActor(Item, &FTransform::Identity));
-	Actor->Build(true);
-	PropertyView->SetObject(Actor);
 }
 void SAssetBrowser::OnPropertyChanged(FPropertyNode* PropertyNode, uint8* Data)
 {

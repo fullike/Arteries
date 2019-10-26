@@ -7,6 +7,7 @@
 #include "Widgets/Layout/SScrollBox.h"
 #include "Widgets/Input/SEditableTextBox.h"
 #include "Widgets/Input/SNumericEntryBox.h"
+#include "Classes/Engine/AssetManager.h"
 
 struct FPropertyColumnSizeData
 {
@@ -72,6 +73,10 @@ class FObjectPropertyNode : public FPropertyNode
 {
 public:
 	DECLARE_PROPERTY_NODE(FObjectPropertyNode)
+	void SetValue(UObject* Object);
+	UObject* GetValue() const;
+	virtual TSharedRef<SWidget> CreateValue();
+	TArray<TSharedPtr<FAssetData>> DataSource;
 };
 class FBoolPropertyNode : public FPropertyNode
 {

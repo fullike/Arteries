@@ -43,5 +43,5 @@ public:
 	FOnContextMenuOpened ContextMenuOpened;
 	UStruct* RootStruct;
 	uint8* RootData;
-	float ColumnWidth = 0.5f;
+	float ColumnWidth = 0.7f;
 };

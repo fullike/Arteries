@@ -13,4 +13,7 @@ class ARTERIESLAUNCHER_API AMyController : public APlayerController
 	GENERATED_UCLASS_BODY()
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds);
+	TSharedPtr<SWindow> Window;
+	TSharedPtr<SAssetBrowser> AssetBrowser;
 };

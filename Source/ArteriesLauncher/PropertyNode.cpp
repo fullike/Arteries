@@ -1,5 +1,6 @@
 #include "PropertyNode.h"
 #include "PropertyView.h"
+
 TMap<UClass*, CreatePropertyNodeFunc> FPropertyNode::CreateFunc;
 FArrayPropertyNode::FArrayPropertyNode(SPropertyView* InView, FPropertyNode* InParent, UProperty* InProperty, uint8* InData):FPropertyNode(InView,InParent,InProperty,InData)
 {
@@ -50,6 +51,37 @@ FStructPropertyNode::FStructPropertyNode(SPropertyView* InView, FPropertyNode* I
 }
 FObjectPropertyNode::FObjectPropertyNode(SPropertyView* InView, FPropertyNode* InParent, UProperty* InProperty, uint8* InData) : FPropertyNode(InView, InParent, InProperty, InData)
 {
+	IAssetRegistry& AssetRegistry = UAssetManager::Get().GetAssetRegistry();
+	FARFilter Filter;
+	if (UObject* Object = GetValue())
+	{
+		FString PackageName = Object->GetOutermost()->GetName();
+		FString Path = FPaths::GetPath(PackageName);
+		Filter.PackagePaths.Add(*Path);
+	}
+	else
+		Filter.PackagePaths.Add(TEXT("/Game/"));
+	UObjectProperty* ObjProp = Cast<UObjectProperty>(Property);
+	if (ObjProp->PropertyClass == UClass::StaticClass())
+		Filter.ClassNames.Add(TEXT("Blueprint"));
+	else
+		Filter.ClassNames.Add(*ObjProp->PropertyClass->GetName());
+	Filter.bRecursiveClasses = true;
+	TArray<FAssetData> Assets;
+	AssetRegistry.GetAssets(Filter, Assets);
+	for (FAssetData& Asset : Assets)
+	{
+		if (ObjProp->PropertyClass == UClass::StaticClass())
+		{
+			UPackage* Package = Asset.GetPackage();
+			UClass* Class = static_cast<UClass*>(FindObjectWithOuter(Package, ObjProp->PropertyClass));
+			if (Class->HasAnyClassFlags(EClassFlags::CLASS_Abstract))
+				continue;
+			if (!Class->Interfaces.Num())
+				continue;
+		}
+		DataSource.Add(MakeShareable(new FAssetData(Asset)));
+	}
 }
 FBoolPropertyNode::FBoolPropertyNode(SPropertyView* InView, FPropertyNode* InParent, UProperty* InProperty, uint8* InData) : FPropertyNode(InView, InParent, InProperty, InData)
 {
@@ -97,6 +129,40 @@ TSharedRef<SWidget> FPropertyNode::CreateName()
 TSharedRef<SWidget> FPropertyNode::CreateValue()
 {
 	return SNullWidget::NullWidget;
+}
+void FObjectPropertyNode::SetValue(UObject* Object)
+{
+	UObjectProperty* ObjProp = Cast<UObjectProperty>(Property);
+	ObjProp->SetObjectPropertyValue(Data, Object);
+	OnPropertyChanged();
+}
+UObject* FObjectPropertyNode::GetValue() const
+{
+	UObjectProperty* ObjProp = Cast<UObjectProperty>(Property);
+	return ObjProp->GetObjectPropertyValue(Data);
+}
+TSharedRef<SWidget> FObjectPropertyNode::CreateValue()
+{
+	return SNew(SComboBox<TSharedPtr<FAssetData>>)
+		.OptionsSource(&DataSource)
+		.OnGenerateWidget_Lambda([](TSharedPtr<FAssetData> Item)
+		{
+			return SNew(STextBlock).Text(FText::FromName(Item->PackageName));
+		})
+		.OnSelectionChanged_Lambda([&](TSharedPtr<FAssetData> Item, ESelectInfo::Type)
+		{
+			UObjectProperty* ObjProp = Cast<UObjectProperty>(Property);
+			UPackage* Pkg = Item->GetPackage();
+			UObject* Object = (UObject*)FindObjectWithOuter(Pkg, ObjProp->PropertyClass);
+			SetValue(Object);
+		})
+		[
+			SNew(STextBlock).Text_Lambda([this]
+			{
+				UObject* Object = GetValue();
+				return FText::FromName(Object ? Object->GetOutermost()->GetFName() : FName("None"));
+			})
+		];
 }
 void FBoolPropertyNode::SetValue(ECheckBoxState NewCheckState)
 {

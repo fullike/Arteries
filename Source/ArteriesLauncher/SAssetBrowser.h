@@ -17,14 +17,15 @@ public:
 	SLATE_BEGIN_ARGS(SAssetBrowser){}
 	SLATE_END_ARGS()
 	SAssetBrowser();
+	~SAssetBrowser();
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
 	TSharedRef<ITableRow> MakeDataTile(UBlueprintGeneratedClass* Item, const TSharedRef<STableViewBase>& Owner);
 	void LoadThumbnail(UBlueprintGeneratedClass* Item);
 	void OnTileViewSelectionChanged(UBlueprintGeneratedClass* Item, ESelectInfo::Type SelectInfo);
 	void OnPropertyChanged(FPropertyNode* PropertyNode, uint8* Data);
-private:
 	AArteriesActor* Actor;
+private:
 	TArray<UBlueprintGeneratedClass*> Data;
 	TSharedPtr<FUICommandList> CommandList;
 	TSharedPtr<SPropertyView> PropertyView;
