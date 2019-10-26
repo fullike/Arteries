@@ -15,6 +15,7 @@ To implement a modeling procedure is rather simple. Just creating a blueprint in
 - Full source code provided.
 
 ### Links
+- [Executable demo](https://drive.google.com/open?id=1iMUdfC_YJOEpDdZ9ntnheR1S-iHPMUOV)
 - [Showcase videos](https://www.youtube.com/watch?v=zkpzxiqoXaU&list=PLCWhWOgVmdwmC1AvcIOw95H3lHI3wF6mG)
 - [Roadmap](https://trello.com/b/SZbZi3Rd/arteries)
 - [Support link](https://forums.unrealengine.com/community/work-in-progress/1637829-houdini-alternative-a-procedural-modeling-toolkit-based-on-blueprint)
@@ -105,7 +106,7 @@ Arteries Viewport works just like original viewport in addition to Arteries spec
 :-:|:-:
 a) Arteries extended windows.|b) Arteries Viewport.
 
-In Arteries Toolbox there are 5 tabs covering editing modes, statistics and settings.
+In Arteries Toolbox there are 4 tabs covering editing modes, statistics and settings.
 
 - Select Mode
 >![](./Images/Img_03.jpg)\
@@ -121,11 +122,6 @@ You can also modify properties of current selected elements in the property edit
 
 - Statistics
 >In this page you can see some statistics of building process.
-
-- Internal Objects
->![](./Images/Img_04.jpg)\
-\
-Some manually created geometry used by the modeling procedure internally should be saved in the same package of the blueprint for the sake of assets management.
 
 ### 3. BP callable functions
 #### Basic Primitives
